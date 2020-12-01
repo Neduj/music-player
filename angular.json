@@ -53,6 +53,7 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss"
             ],
             "scripts": []
@@ -116,6 +117,7 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss"
             ],
             "scripts": []
@@ -149,5 +151,8 @@
       }
     }
   },
-  "defaultProject": "music-player"
+  "defaultProject": "music-player",
+  "cli": {
+    "analytics": "58e7292a-aef2-4973-9237-8f8be96c8871"
+  }
 }
