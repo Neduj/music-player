@@ -1,7 +1,13 @@
-<div *ngIf="check" fxLayoutGap="10px" fxLayoutAlign="center center">
+<div
+  class="table__container"
+  #table
+  *ngIf="dataLoaded$ | async"
+  fxLayoutAlign="center center"
+>
   <ngx-datatable
-    #table
-    class="material"
+    fxFlex.gt-xs="50"
+    fxFlex.lt-md="100"
+    class="dark"
     [headerHeight]="50"
     [columnMode]="'force'"
     [footerHeight]="50"
@@ -9,18 +15,26 @@
     [rows]="rows"
     [limit]="10"
   >
-    <ngx-datatable-column [minWidth]="250" name="Track Name">
-    </ngx-datatable-column>
-    <ngx-datatable-column
-      [minWidth]="250"
-      name="Artist Name"
-    ></ngx-datatable-column>
-    <ngx-datatable-column [minWidth]="250" name="Artist Link">
-      <ng-template let-link="value" ngx-datatable-cell-template>
-        <a class="links" [href]="link">Visit artist page</a>
+    <ngx-datatable-column name="Track Name">
+      <ng-template let-track="value" ngx-datatable-cell-template>
+        <p class="table__track">
+          {{ track }}
+        </p>
       </ng-template>
     </ngx-datatable-column>
-    <ngx-datatable-column [minWidth]="250" name="Artist Photo">
+    <ngx-datatable-column name="Artist Name">
+      <ng-template let-val="value" ngx-datatable-cell-template>
+        <p class="table__artist-name">
+          {{ val }}
+        </p>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Artist Link">
+      <ng-template let-link="value" let-val="some" ngx-datatable-cell-template>
+        <a class="table__links" [href]="link"> Visit Artist Page </a>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Artist Photo">
       <ng-template let-img="value" ngx-datatable-cell-template>
         <img [src]="img" alt="" />
       </ng-template>

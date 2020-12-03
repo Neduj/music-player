@@ -1,0 +1,21 @@
+<mat-toolbar class="toolbar__container">
+  <div fxFlex class="toolbar__content">
+    <span class="toolbar__logo">Music Player</span>
+    <div fxFlex fxLayout fxLayoutAlign="flex-end" fxLayoutGap="20px">
+      <span
+        class="toolbar__link"
+        [routerLinkActiveOptions]="{ exact: true }"
+        [routerLink]="''"
+        [routerLinkActive]="'toolbar__link--active'"
+        matTooltip="you"
+        >Home
+      </span>
+      <span
+        class="toolbar__link"
+        [routerLink]="'/search'"
+        [routerLinkActive]="'toolbar__link--active'"
+        >Search</span
+      >
+    </div>
+  </div>
+</mat-toolbar>

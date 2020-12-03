@@ -1,0 +1,27 @@
+@import "./mixins";
+
+.table {
+  &__container {
+    @include table-text;
+    padding: 20px;
+  }
+
+  &__track {
+    @include table-text;
+  }
+
+  &__artist-name {
+    font-size: 16px;
+  }
+
+  &__links {
+    outline: none;
+    text-decoration: none;
+    color: rgb(143, 104, 189);
+    font-size: 16px;
+    &:hover {
+      color: white;
+      font-size: 18px;
+    }
+  }
+}
