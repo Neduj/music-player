@@ -13,14 +13,14 @@ export class HttpService {
   getTracks(): Observable<Tracks> {
     return this.http
       .get<Tracks>(
-        `http://ws.audioscrobbler.com/2.0/?method=chart.gettoptracks&YOUR_API_KEY&format=json`
+        `http://ws.audioscrobbler.com/2.0/?method=chart.gettoptracks&`
       )
       .pipe(map((t) => t.tracks));
   }
 
   search(trackName: string): Observable<any> {
     return this.http.get(
-      `http://ws.audioscrobbler.com/2.0/?method=track.search&track=${trackName}&YOUR_API_KEY&format=json`
+      `http://ws.audioscrobbler.com/2.0/?method=track.search&track=${trackName}&`
     );
   }
 }
