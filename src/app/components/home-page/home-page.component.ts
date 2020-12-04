@@ -1,50 +1,30 @@
-import { ChangeDetectionStrategy } from '@angular/compiler/src/compiler_facade_interface';
-import {
-  AfterViewChecked,
-  AfterViewInit,
-  ChangeDetectorRef,
-  ContentChild,
-  DoCheck,
-  OnChanges,
-  Renderer2,
-} from '@angular/core';
 import { Component, OnInit } from '@angular/core';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { ReplaySubject, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { ReplaySubject } from 'rxjs';
+import { Column } from 'src/app/models/column.interface';
 import { Rows } from 'src/app/models/rows.interface';
 import { Track } from 'src/app/models/track.interface';
 import { HttpService } from 'src/app/services/http.service';
-import { ChartMethod } from '../../methods/chartMethod';
 
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
+  styleUrls: ['./home-page.scss'],
 })
-export class HomePageComponent implements OnInit, AfterViewInit {
-  @ContentChild('artistName') artName: any;
+export class HomePageComponent implements OnInit {
   dataLoaded$ = new ReplaySubject();
-  chartMethod: ChartMethod = new ChartMethod();
   tracks: Track[] = [];
-  scrollBar: boolean = false;
-  tableWidth: number = 50;
   rows: Rows[] = [];
-  columns = [
+  columns: Column[] = [
     { name: 'Track Name', minWidth: 250 },
     { name: 'Artist Name', minWidth: 250 },
     { name: 'Artist link', minWidth: 250 },
     { name: 'Artist Photo', minWidth: 250 },
   ];
-  test: any;
-  constructor(
-    private http: HttpService,
-    private changeDetector: ChangeDetectorRef,
-    private renderer: Renderer2
-  ) {}
+  constructor(private http: HttpService) {}
 
   ngOnInit(): void {
-    this.test = this.http
-      .chartMethod(this.chartMethod.getTopTracks)
+    this.http
+      .getTracks()
 
       .subscribe((t) => {
         this.tracks = t.track;
@@ -59,15 +39,5 @@ export class HomePageComponent implements OnInit, AfterViewInit {
           this.dataLoaded$.next(true);
         }
       });
-  }
-
-  ngAfterViewInit(): void {
-    if (document.body.clientWidth < 600) {
-      this.scrollBar = true;
-      this.tableWidth = 100;
-    } else {
-      this.scrollBar = false;
-      this.tableWidth = 50;
-    }
   }
 }

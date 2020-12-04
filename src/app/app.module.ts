@@ -13,6 +13,7 @@ import { MaterialModule } from './material/material.module';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ToolBarComponent } from './navigation/tool-bar/tool-bar.component';
 import { ApiInterceptor } from './interceptor/api-interceptor';
+import { TableComponent } from './components/table/table.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { ApiInterceptor } from './interceptor/api-interceptor';
     HomePageComponent,
     SearchComponent,
     ToolBarComponent,
+    TableComponent,
   ],
   imports: [
     BrowserModule,

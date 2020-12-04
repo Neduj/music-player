@@ -1,7 +1,10 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { Observable, ReplaySubject } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { Column } from 'src/app/models/column.interface';
+import { Rows } from 'src/app/models/rows.interface';
 import { HttpService } from 'src/app/services/http.service';
 
 @Component({
@@ -10,12 +13,17 @@ import { HttpService } from 'src/app/services/http.service';
   styleUrls: ['./search.component.scss'],
 })
 export class SearchComponent {
+  @ViewChild(MatAutocompleteTrigger)
+  autoComplete!: MatAutocompleteTrigger;
   form: FormGroup = new FormGroup({});
   focused = false;
-  tracks: any;
-  stream$ = new Subject<any>();
-
-  tracks$ = this.stream$.pipe(debounceTime(2500), distinctUntilChanged());
+  tracks: any = [];
+  rows: Rows[] = [];
+  columns: Column[] = [
+    { name: 'Track Name', minWidth: 250 },
+    { name: 'Artist Name', minWidth: 250 },
+  ];
+  displayTable$ = new ReplaySubject();
 
   constructor(private fB: FormBuilder, private http: HttpService) {
     this.form = this.fB.group({
@@ -25,18 +33,48 @@ export class SearchComponent {
 
   onFocus(): void {
     this.focused = true;
+    this.searcher();
   }
 
   onBlur(): void {
     this.focused = false;
+    if (this.form.controls.search.value) {
+      this.displayTable$.next(true);
+    } else {
+      this.displayTable$.next(false);
+    }
   }
 
-  subm(): void {
+  searcher(ev?: KeyboardEvent): void {
+    console.log(this.form.controls.search.value);
+
     if (!this.form.controls.search.value) {
+      this.tracks = [];
+      this.rows = [];
       return;
     }
-    this.http.searchMethod(this.form.controls.search.value).subscribe((t) => {
-      this.tracks = t.results.trackmatches.track;
-    });
+
+    if (ev && ev.key === 'Enter') {
+      this.autoComplete.closePanel();
+      this.displayTable$.next(true);
+    }
+
+    this.http
+      .search(this.form.controls.search.value)
+      .pipe(
+        tap((t) => {
+          this.tracks = t.results.trackmatches.track;
+          this.rows = [];
+          for (const track of this.tracks) {
+            this.rows.push({
+              artistName: track.artist,
+              trackName: track.name,
+              artistLink: '',
+              artistPhoto: '',
+            });
+          }
+        })
+      )
+      .subscribe();
   }
 }
