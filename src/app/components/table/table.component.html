@@ -1,0 +1,28 @@
+<div class="table__container" fxLayoutAlign="center center">
+  <ngx-datatable
+    class="dark"
+    fxFlex.gt-xs="50"
+    fxFlex.lt-md="100"
+    [headerHeight]="50"
+    [columnMode]="'force'"
+    [footerHeight]="50"
+    [rowHeight]="50"
+    [rows]="rows"
+    [limit]="limit ? 10 : rows.length"
+  >
+    <ngx-datatable-column
+      *ngFor="let col of columns"
+      [name]="col.name ? col.name : ''"
+    >
+      <ng-template let-value="value" ngx-datatable-cell-template>
+        <p *ngIf="isString(value)" class="table__track">
+          {{ value }}
+        </p>
+        <img *ngIf="isImgLink(value)" [src]="value" alt="no img" />
+        <a *ngIf="isLink(value)" class="table__links" [href]="value">
+          Visit Artist Page
+        </a>
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+</div>

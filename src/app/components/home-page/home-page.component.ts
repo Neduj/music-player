@@ -1,44 +1,43 @@
-import { ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import { Column } from 'src/app/models/column.interface';
 import { Rows } from 'src/app/models/rows.interface';
 import { Track } from 'src/app/models/track.interface';
-import { ChartMethod } from '../../methods/chartMethod';
-import { HttpService } from '../services/http.service';
+import { HttpService } from 'src/app/services/http.service';
 
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
-  styleUrls: ['./home-page.component.scss'],
+  styleUrls: ['./home-page.scss'],
 })
 export class HomePageComponent implements OnInit {
-  chartMethod: ChartMethod = new ChartMethod();
+  dataLoaded$ = new ReplaySubject();
   tracks: Track[] = [];
   rows: Rows[] = [];
-  check = false;
-  columns = [
+  columns: Column[] = [
     { name: 'Track Name', minWidth: 250 },
     { name: 'Artist Name', minWidth: 250 },
     { name: 'Artist link', minWidth: 250 },
     { name: 'Artist Photo', minWidth: 250 },
   ];
-
-  @ViewChild('table') table: any;
   constructor(private http: HttpService) {}
 
   ngOnInit(): void {
-    this.http.chartMethod(this.chartMethod.getTopTracks).subscribe((t) => {
-      const i = 1;
-      this.tracks = t.track;
-      for (const iterator of t.track) {
-        this.rows.push({
-          trackName: iterator.name,
-          artistName: iterator.artist.name,
-          artistLink: iterator.artist.url,
-          artistPhoto: iterator.image[0]['#text'],
-        });
-        console.log(this.rows);
-        this.check = true;
-      }
-    });
+    this.http
+      .getTracks()
+
+      .subscribe((t) => {
+        this.tracks = t.track;
+        for (const track of t.track) {
+          this.rows.push({
+            trackName: track.name,
+            artistName: track.artist.name,
+            artistLink: track.artist.url,
+            artistPhoto: track.image[0]['#text'],
+          });
+
+          this.dataLoaded$.next(true);
+        }
+      });
   }
 }

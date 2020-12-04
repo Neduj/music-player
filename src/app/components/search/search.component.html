@@ -1,1 +1,38 @@
-<p>search works!</p>
+<div [formGroup]="form">
+  <mat-card class="card__container">
+    <mat-card-content>
+      <mat-form-field class="card__form-field" color="primary">
+        <input
+          (focus)="onFocus()"
+          (blur)="onBlur()"
+          (keyup)="searcher($event)"
+          formControlName="search"
+          class="card__input"
+          matInput
+          [matAutocomplete]="auto"
+        />
+        <mat-placeholder
+          [ngClass]="
+            !focused
+              ? 'card__input-placeholder'
+              : 'card__input-placeholder--focused'
+          "
+          >Find your favorite track</mat-placeholder
+        >
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option
+            class="card__autocomplete"
+            *ngFor="let track of tracks"
+            [value]="track.name + ' / ' + track.artist"
+          >
+            Track: {{ track.name }} / Artist: {{ track.artist }}
+            <mat-divider></mat-divider>
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </mat-card-content>
+  </mat-card>
+</div>
+<div *ngIf="displayTable$ | async">
+  <app-table [columns]="columns" [rows]="rows"></app-table>
+</div>

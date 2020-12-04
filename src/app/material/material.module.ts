@@ -1,9 +1,19 @@
 import { NgModule } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
-import { MatTableModule } from '@angular/material/table';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
-const MAT_MODULES = [MatInputModule, MatTableModule, MatDialogModule];
+const MAT_MODULES = [
+  MatInputModule,
+  MatToolbarModule,
+  MatFormFieldModule,
+  MatCardModule,
+  MatDividerModule,
+  MatAutocompleteModule,
+];
 
 @NgModule({
   exports: [MAT_MODULES],

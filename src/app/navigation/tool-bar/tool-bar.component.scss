@@ -1,0 +1,26 @@
+.toolbar {
+  &__container {
+    background: rgb(18, 18, 18);
+    color: wheat;
+  }
+
+  &__logo {
+    color: whitesmoke;
+    user-select: none;
+  }
+
+  &__content {
+    padding: 20px;
+  }
+
+  &__link {
+    color: rgb(143, 104, 189);
+    cursor: pointer;
+    outline: none;
+    &--active {
+      color: white;
+      user-select: none;
+      cursor: default;
+    }
+  }
+}
