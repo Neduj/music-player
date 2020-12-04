@@ -13,7 +13,7 @@ export class ApiInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     const urlWithApi = req.clone({
-      url: req.url.replace('YOUR_API_KEY', environment.api_key),
+      url: req.url.concat(environment.api_key + '&format=json'),
     });
 
     return next.handle(urlWithApi);
