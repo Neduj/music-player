@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ReplaySubject, Subscription } from 'rxjs';
 import { Column } from 'src/app/models/column.interface';
 import { Rows } from 'src/app/models/rows.interface';
 import { Track } from 'src/app/models/track.interface';
@@ -10,7 +10,7 @@ import { HttpService } from 'src/app/services/http.service';
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.scss'],
 })
-export class HomePageComponent implements OnInit {
+export class HomePageComponent implements OnInit, OnDestroy {
   dataLoaded$ = new ReplaySubject();
   tracks: Track[] = [];
   rows: Rows[] = [];
@@ -20,10 +20,11 @@ export class HomePageComponent implements OnInit {
     { name: 'Artist link', minWidth: 250 },
     { name: 'Artist Photo', minWidth: 250 },
   ];
+  stream$ = new Subscription();
   constructor(private http: HttpService) {}
 
   ngOnInit(): void {
-    this.http
+    this.stream$ = this.http
       .getTracks()
 
       .subscribe((t) => {
@@ -39,5 +40,9 @@ export class HomePageComponent implements OnInit {
           this.dataLoaded$.next(true);
         }
       });
+  }
+
+  ngOnDestroy() {
+    this.stream$.unsubscribe();
   }
 }

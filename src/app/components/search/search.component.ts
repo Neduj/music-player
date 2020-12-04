@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { Observable, ReplaySubject } from 'rxjs';
@@ -12,7 +12,7 @@ import { HttpService } from 'src/app/services/http.service';
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
 })
-export class SearchComponent {
+export class SearchComponent implements OnDestroy {
   @ViewChild(MatAutocompleteTrigger)
   autoComplete!: MatAutocompleteTrigger;
   form: FormGroup = new FormGroup({});
@@ -45,7 +45,7 @@ export class SearchComponent {
     }
   }
 
-  searcher(ev?: KeyboardEvent): void {
+  searcher(ev?: KeyboardEvent) {
     console.log(this.form.controls.search.value);
 
     if (!this.form.controls.search.value) {
@@ -59,7 +59,7 @@ export class SearchComponent {
       this.displayTable$.next(true);
     }
 
-    this.http
+    return this.http
       .search(this.form.controls.search.value)
       .pipe(
         tap((t) => {
@@ -76,5 +76,9 @@ export class SearchComponent {
         })
       )
       .subscribe();
+  }
+
+  ngOnDestroy() {
+    this.searcher()?.unsubscribe();
   }
 }
