@@ -1,5 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ReplaySubject, Subscription } from 'rxjs';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable, ReplaySubject, Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { Column } from 'src/app/models/column.interface';
 import { Rows } from 'src/app/models/rows.interface';
 import { Track } from 'src/app/models/track.interface';
@@ -10,7 +11,7 @@ import { HttpService } from 'src/app/services/http.service';
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.scss'],
 })
-export class HomePageComponent implements OnInit, OnDestroy {
+export class HomePageComponent implements AfterViewInit {
   dataLoaded$ = new ReplaySubject();
   tracks: Track[] = [];
   rows: Rows[] = [];
@@ -20,29 +21,29 @@ export class HomePageComponent implements OnInit, OnDestroy {
     { name: 'Artist link', minWidth: 250 },
     { name: 'Artist Photo', minWidth: 250 },
   ];
-  stream$ = new Subscription();
+  stream$ = new Observable();
   constructor(private http: HttpService) {}
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.stream$ = this.http
       .getTracks()
 
-      .subscribe((t) => {
-        this.tracks = t.track;
-        for (const track of t.track) {
-          this.rows.push({
-            trackName: track.name,
-            artistName: track.artist.name,
-            artistLink: track.artist.url,
-            artistPhoto: track.image[0]['#text'],
-          });
+      .pipe(
+        tap((t) => {
+          this.tracks = t.track;
+          for (const track of t.track) {
+            {
+              this.rows.push({
+                trackName: track.name,
+                artistName: track.artist.name,
+                artistLink: track.artist.url,
+                artistPhoto: track.image[0]['#text'],
+              });
 
-          this.dataLoaded$.next(true);
-        }
-      });
-  }
-
-  ngOnDestroy() {
-    this.stream$.unsubscribe();
+              this.dataLoaded$.next(true);
+            }
+          }
+        })
+      );
   }
 }

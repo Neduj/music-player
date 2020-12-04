@@ -78,7 +78,7 @@ export class SearchComponent implements OnDestroy {
       .subscribe();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.searcher()?.unsubscribe();
   }
 }
