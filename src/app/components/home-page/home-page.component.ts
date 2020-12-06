@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, ReplaySubject, Subscription } from 'rxjs';
+import { AfterViewInit, Component } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Column } from 'src/app/models/column.interface';
 import { Rows } from 'src/app/models/rows.interface';
@@ -12,7 +12,7 @@ import { HttpService } from 'src/app/services/http.service';
   styleUrls: ['./home-page.scss'],
 })
 export class HomePageComponent implements AfterViewInit {
-  dataLoaded$ = new ReplaySubject();
+  dataLoaded$ = new Subject();
   tracks: Track[] = [];
   rows: Rows[] = [];
   columns: Column[] = [
@@ -30,8 +30,8 @@ export class HomePageComponent implements AfterViewInit {
 
       .pipe(
         tap((t) => {
-          this.tracks = t.track;
-          for (const track of t.track) {
+          this.tracks = t.tracks.track;
+          for (const track of t.tracks.track) {
             {
               this.rows.push({
                 trackName: track.name,

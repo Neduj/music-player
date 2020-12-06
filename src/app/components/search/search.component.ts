@@ -1,7 +1,7 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
-import { Observable, ReplaySubject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Column } from 'src/app/models/column.interface';
 import { Rows } from 'src/app/models/rows.interface';
@@ -23,7 +23,7 @@ export class SearchComponent implements OnDestroy {
     { name: 'Track Name', minWidth: 250 },
     { name: 'Artist Name', minWidth: 250 },
   ];
-  displayTable$ = new ReplaySubject();
+  displayTable$ = new Subject();
 
   constructor(private fB: FormBuilder, private http: HttpService) {
     this.form = this.fB.group({
@@ -46,8 +46,6 @@ export class SearchComponent implements OnDestroy {
   }
 
   searcher(ev?: KeyboardEvent) {
-    console.log(this.form.controls.search.value);
-
     if (!this.form.controls.search.value) {
       this.tracks = [];
       this.rows = [];
